@@ -1,0 +1,135 @@
+﻿@using Ribbit_API.Models
+@model Product;
+
+@{
+    ViewData["Title"] = "Agregar producto";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h4>Agregar producto</h4>
+        </p>
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form asp-action="Agregar">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="Nombre" class="control-label"></label>
+                                <input asp-for="Nombre" class="form-control" />
+                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Descripcion" class="control-label"></label>
+                                <textarea asp-for="Descripcion" class="form-control"></textarea>
+                                <span asp-validation-for="Descripcion" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Precio" class="control-label"></label>
+                                <input asp-for="Precio" class="form-control" />
+                                <span asp-validation-for="Precio" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Stock" class="control-label"></label>
+                                <input asp-for="Stock" class="form-control" />
+                                <span asp-validation-for="Stock" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Agregar" class="btn btn-outline-success float-sm-end" />
+                        <a class="btn btn-outline-secondary" asp-action="Index">Regresar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function validarCampo($campo) {
+                let valor = $campo.val();
+                let nombreCampo = $campo.attr("name");
+                let errMsg = "";
+                let $errorSpan = $("span[data-valmsg-for='" + nombreCampo + "']");
+
+                switch (nombreCampo.toLowerCase()) {
+                    case "nombre":
+                        if (valor === "") {
+                            errMsg = "Este campo es requerido";
+                        } else if (valor.length < 3) {
+                            errMsg = "Mínimo 3 caracteres";
+                        } else if (valor.length > 100) {
+                            errMsg = "Máximo 100 caracteres";
+                        }
+                        break;
+                    case "descripcion":
+                        if (valor.length > 500) {
+                            errMsg = "Máximo 500 caracteres";
+                        }
+                        break;
+
+                    case "precio":
+                        if (valor === "") {
+                            errMsg = "Este campo es requerido";
+                        } else if (isNaN(valor) || parseFloat(valor) <= 0) {
+                            errMsg = "Solo números positivos";
+                        }
+                        break;
+
+                    case "stock":
+                        if (valor === "") {
+                            errMsg = "Este campo es requerido";
+                        } else if (!/^\d+$/.test(valor) || parseInt(valor) < 1) {
+                            errMsg = "Solo números enteros positivos";
+                        }
+                        break;
+                }// end switch
+
+
+                //show error
+                if (errMsg) {
+                    $errorSpan.text(errMsg).show();
+                } else {
+                    $errorSpan.text("").hide();
+                }
+                return errMsg === "";
+            }
+
+            $("input").on("input", function () {
+                validarCampo($(this));
+            });
+
+            $("form").submit(function (e) {
+                e.preventDefault(); 
+
+                let valido = true;
+
+                $("input, textarea").each(function () {
+                    let $campo = $(this);
+                    if ($campo.length === 0 || !$campo.attr("name")) {
+                        console.warn("Elemento sin name encontrado y omitido", $campo);
+                        return;
+                    }
+
+                    if (!validarCampo($campo)) {
+                        valido = false;
+                    }
+                });
+
+
+                if (!valido) {
+                    alert("Errores encontrados, revisa los campos del formulario");
+                } else {
+                    this.submit(); 
+                }
+            });
+
+
+        });
+    </script>
+}

@@ -1,0 +1,19 @@
+﻿@using Ribbit_API.Models
+@model IEnumerable<Product>
+
+@foreach (var producto in Model)
+{
+    <tr>
+        <td class="align-left">@producto.Id</td>
+        <td class="align-left">@producto.Nombre</td>
+        <td class="align-left descripcion-columna">@producto.Descripcion</td>
+        <td class="align-right">@producto.Precio.ToString("c")</td>
+        <td class="align-left">@producto.Stock</td>
+        <td class="align-left">@producto.FechaCreacion.ToString("dd/MM/yyyy hh:mm:ss")</td>
+        <td class="align-middle">
+            <a class="btn btn-outline-info small-text" asp-action="Details" asp-route-id="@producto.Id"><i class="bi bi-eye"></i>Ver</a>
+            <a class="btn btn-outline-primary small-text" asp-action="Edit" asp-route-id="@producto.Id"><i class="bi bi-pencil-square"></i>Editar</a>
+            <a class="btn btn-danger small-text" asp-action="Delete" asp-route-id="@producto.Id"><i class="bi bi-trash"></i>Eliminar</a>
+        </td>
+    </tr>
+}
