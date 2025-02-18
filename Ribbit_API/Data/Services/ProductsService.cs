@@ -8,11 +8,9 @@ namespace Ribbit_API.Data.Services
 {
     public class ProductsService : EntityBaseRepository<Product>, IProductsService
     {
-        private readonly AppDbContext _context;
-
         public ProductsService(AppDbContext context) : base(context)
         {
-            this._context = context;
+            
         }
 
         public async Task UpdateProduct(int id, Product product)
